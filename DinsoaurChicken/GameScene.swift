@@ -11,9 +11,10 @@ import GameplayKit
 class GameScene: SKScene {
 
     private var chicken: SKSpriteNode?
-    private var label : SKLabelNode?
+    private var floor : SKSpriteNode?
 
-    override func didMove(to view: SKView) {
+    override func sceneDidLoad() {
+        super.sceneDidLoad()
         self.chicken = SKSpriteNode(imageNamed: "chicken-drawing")
         self.chicken?.size = CGSize(width: 100, height: 100)
         if let chicken = chicken {
@@ -23,12 +24,29 @@ class GameScene: SKScene {
             x: self.frame.midX,
             y: self.frame.midY
         )
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
+        self.floor = self.childNode(withName: "floor") as? SKSpriteNode
+
+        if let floor = self.floor {
+            print("DEANDEBUG \(floor.frame.size)")
+            floor.physicsBody = SKPhysicsBody(
+                rectangleOf: floor.frame.size
+            )
+            floor.physicsBody?.isDynamic = false
+            floor.physicsBody?.categoryBitMask = 1
         }
+
+        if let chicken = self.chicken {
+            chicken.physicsBody = SKPhysicsBody(
+                rectangleOf: chicken.frame.size
+            )
+            chicken.physicsBody?.collisionBitMask = 1
+        }
+
+        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+    }
+
+    override func didMove(to view: SKView) {
+        view.showsPhysics = true
     }
     
     
@@ -45,10 +63,6 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
-        
         for t in touches { self.touchDown(atPoint: t.location(in: self)) }
     }
     
