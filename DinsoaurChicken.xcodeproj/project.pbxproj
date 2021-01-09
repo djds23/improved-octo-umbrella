@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7B844A9925AA160B005FAB7D /* Masks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B844A9825AA160B005FAB7D /* Masks.swift */; };
 		7BA0AB0725A91DAA0090E7C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA0AB0625A91DAA0090E7C0 /* AppDelegate.swift */; };
 		7BA0AB0925A91DAA0090E7C0 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7BA0AB0825A91DAA0090E7C0 /* GameScene.sks */; };
 		7BA0AB0B25A91DAA0090E7C0 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7BA0AB0A25A91DAA0090E7C0 /* Actions.sks */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7B844A9825AA160B005FAB7D /* Masks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Masks.swift; sourceTree = "<group>"; };
 		7BA0AB0325A91DAA0090E7C0 /* DinsoaurChicken.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DinsoaurChicken.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BA0AB0625A91DAA0090E7C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7BA0AB0825A91DAA0090E7C0 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				7BA0AB1025A91DAA0090E7C0 /* Main.storyboard */,
 				7BA0AB1325A91DAB0090E7C0 /* Assets.xcassets */,
 				7BA0AB1525A91DAB0090E7C0 /* Info.plist */,
+				7B844A9825AA160B005FAB7D /* Masks.swift */,
 			);
 			path = DinsoaurChicken;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7BA0AB0D25A91DAA0090E7C0 /* GameScene.swift in Sources */,
+				7B844A9925AA160B005FAB7D /* Masks.swift in Sources */,
 				7BA0AB0F25A91DAA0090E7C0 /* GameViewController.swift in Sources */,
 				7BA0AB0725A91DAA0090E7C0 /* AppDelegate.swift in Sources */,
 			);
