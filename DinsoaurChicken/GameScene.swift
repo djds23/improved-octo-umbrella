@@ -27,7 +27,6 @@ class GameScene: SKScene {
         self.floor = self.childNode(withName: "floor") as? SKSpriteNode
 
         if let floor = self.floor {
-            print("DEANDEBUG \(floor.frame.size)")
             floor.physicsBody = SKPhysicsBody(
                 rectangleOf: floor.frame.size
             )
