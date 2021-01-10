@@ -11,18 +11,17 @@ import GameplayKit
 class GameScene: SKScene {
 
     private var chicken: SKSpriteNode?
-    private var floor : SKSpriteNode?
-    private var dino : SKSpriteNode?
-
-    private var enemyEntity: EnemyEntity? {
-        self.dino?.entity as? EnemyEntity
-    }
+    private var floor: SKSpriteNode?
+    private var dino: SKSpriteNode?
+    private var scoreLabel: SKLabelNode?
+    private var enemyEntity: EnemyEntity!
 
     override func sceneDidLoad() {
         super.sceneDidLoad()
         self.chicken = self.childNode(withName: "chicken") as? SKSpriteNode
         self.dino = self.childNode(withName: "dino") as? SKSpriteNode
         self.floor = self.childNode(withName: "floor") as? SKSpriteNode
+        self.scoreLabel = self.childNode(withName: "scoreLabel") as? SKLabelNode
 
         var floorHeight = CGFloat(0)
         if let floor = self.floor {
@@ -79,6 +78,7 @@ class GameScene: SKScene {
         let dinoLoop = SKAction.repeatForever(dinoSequence)
         dinoLoop.timingMode = .linear
         dino?.run(dinoLoop)
+        enemyEntity = configureEnemyEntity()
 
         self.physicsWorld.contactDelegate = self
     }
@@ -115,6 +115,7 @@ extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         if contact.bodyA.node?.name == "dino" || contact.bodyB.node?.name == "dino" {
             enemyEntity?.stateMachine.enter(IntersectingState.self)
+            scoreLabel?.text = "Score: \(enemyEntity.score)"
         }
     }
 }
