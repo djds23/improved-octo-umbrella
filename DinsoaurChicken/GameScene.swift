@@ -17,28 +17,17 @@ class GameScene: SKScene {
     override func sceneDidLoad() {
         super.sceneDidLoad()
         self.chicken = self.childNode(withName: "chicken") as? SKSpriteNode
-        self.chicken?.size = CGSize(width: 100, height: 100)
         self.dino = self.childNode(withName: "dino") as? SKSpriteNode
-        self.dino?.xScale = -1
-
-
-        let dinoSequence = SKAction.sequence([
-            SKAction.moveTo(x: self.frame.minX, duration: 3),
-            SKAction.hide(),
-            SKAction.moveTo(x: self.frame.maxX, duration: 0),
-            SKAction.unhide()
-        ])
-        let dinoLoop = SKAction.repeatForever(dinoSequence)
-        dino?.run(dinoLoop)
         self.floor = self.childNode(withName: "floor") as? SKSpriteNode
 
-//        self.chicken?.position = .zero
+        var floorHeight = CGFloat(0)
         if let floor = self.floor {
             floor.physicsBody = SKPhysicsBody(
                 rectangleOf: floor.frame.size
             )
             floor.physicsBody?.isDynamic = false
             floor.physicsBody?.categoryBitMask = Masks.floor
+            floorHeight = floor.frame.maxY
         }
 
         if let chicken = self.chicken {
@@ -49,16 +38,36 @@ class GameScene: SKScene {
             chicken.physicsBody?.collisionBitMask = Masks.floor | Masks.dino
         }
 
+        var dinoHalfWidth = CGFloat(0)
+        var dinoHalfHeight = CGFloat(0)
         if let dino = self.dino {
             dino.physicsBody = SKPhysicsBody(
                 rectangleOf: dino.frame.size
             )
             dino.physicsBody?.categoryBitMask = Masks.chicken
             dino.physicsBody?.collisionBitMask = Masks.floor | Masks.chicken
+            dinoHalfHeight = dino.size.height / 2
+            dinoHalfWidth = dino.size.width / 2
         }
 
-        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
-        self.physicsBody?.categoryBitMask = Masks.floor
+        let dinoSequence = SKAction.sequence([
+            SKAction.moveTo(x: self.frame.minX - 500, duration: 2),
+            SKAction.hide(),
+            SKAction.moveTo(x: self.frame.maxX, duration: 0),
+            SKAction.move(
+                to: CGPoint(
+                    x: self.frame.maxX + dinoHalfWidth,
+                    y: floorHeight + dinoHalfHeight
+                ),
+                duration: 0
+            ),
+            SKAction.rotate(toAngle: 0, duration: 0),
+            SKAction.unhide()
+        ])
+
+        let dinoLoop = SKAction.repeatForever(dinoSequence)
+        dinoLoop.timingMode = .linear
+        dino?.run(dinoLoop)
     }
 
     override func didMove(to view: SKView) {
