@@ -14,6 +14,10 @@ class GameScene: SKScene {
     private var floor : SKSpriteNode?
     private var dino : SKSpriteNode?
 
+    private var enemyEntity: EnemyEntity? {
+        self.dino?.entity as? EnemyEntity
+    }
+
     override func sceneDidLoad() {
         super.sceneDidLoad()
         self.chicken = self.childNode(withName: "chicken") as? SKSpriteNode
@@ -46,11 +50,15 @@ class GameScene: SKScene {
             )
             dino.physicsBody?.categoryBitMask = Masks.chicken
             dino.physicsBody?.collisionBitMask = Masks.floor | Masks.chicken
+            dino.physicsBody?.contactTestBitMask = Masks.chicken
             dinoHalfHeight = dino.size.height / 2
             dinoHalfWidth = dino.size.width / 2
         }
 
         let dinoSequence = SKAction.sequence([
+            SKAction.customAction(withDuration: 0, actionBlock: { [weak self ](_, _) in
+                self?.enemyEntity?.stateMachine.enter(RunningState.self)
+            }),
             SKAction.moveTo(x: self.frame.minX - 500, duration: 2),
             SKAction.hide(),
             SKAction.moveTo(x: self.frame.maxX, duration: 0),
@@ -62,12 +70,17 @@ class GameScene: SKScene {
                 duration: 0
             ),
             SKAction.rotate(toAngle: 0, duration: 0),
+            SKAction.customAction(withDuration: 0, actionBlock: { [weak self ](_, _) in
+                self?.enemyEntity?.stateMachine.enter(RunningState.self)
+            }),
             SKAction.unhide()
         ])
 
         let dinoLoop = SKAction.repeatForever(dinoSequence)
         dinoLoop.timingMode = .linear
         dino?.run(dinoLoop)
+
+        self.physicsWorld.contactDelegate = self
     }
 
     override func didMove(to view: SKView) {
@@ -85,5 +98,23 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+    }
+
+    func configureEnemyEntity() -> EnemyEntity {
+        guard let dino = self.dino else {
+            fatalError("Cannot configure before enemy is set")
+        }
+        let entity = EnemyEntity()
+        dino.entity = entity
+        entity.sprite = dino
+        return entity
+    }
+}
+
+extension GameScene: SKPhysicsContactDelegate {
+    func didBegin(_ contact: SKPhysicsContact) {
+        if contact.bodyA.node?.name == "dino" || contact.bodyB.node?.name == "dino" {
+            enemyEntity?.stateMachine.enter(IntersectingState.self)
+        }
     }
 }
