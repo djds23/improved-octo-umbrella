@@ -40,6 +40,7 @@ class EnemyEntity: GKEntity {
         }
         return offscreenState.score
     }
+
     override func update(deltaTime seconds: TimeInterval) {
         stateMachine.update(deltaTime: seconds)
         if stateMachine.currentState == nil {
