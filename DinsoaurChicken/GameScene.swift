@@ -95,9 +95,15 @@ class GameScene: SKScene {
         for t in touches { self.touchUp(atPoint: t.location(in: self)) }
     }
     
-    
+    var previousUpdateTime: TimeInterval = 0
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+        let delta = currentTime - previousUpdateTime
+        enemyEntity.update(deltaTime: delta)
+
+        if let dino = self.dino, intersects(dino) == false {
+            enemyEntity?.stateMachine.enter(OffscreenState.self)
+        }
+        scoreLabel?.text = "Score: \(enemyEntity.score)"
     }
 
     func configureEnemyEntity() -> EnemyEntity {
@@ -115,7 +121,6 @@ extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         if contact.bodyA.node?.name == "dino" || contact.bodyB.node?.name == "dino" {
             enemyEntity?.stateMachine.enter(IntersectingState.self)
-            scoreLabel?.text = "Score: \(enemyEntity.score)"
         }
     }
 }
